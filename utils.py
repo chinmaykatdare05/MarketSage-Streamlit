@@ -67,7 +67,7 @@ def get_equity_list() -> dict:
     Returns:
         dict: A dictionary with symbols as keys and company names as values.
     """
-    return pd.read_csv("equityList.csv")
+    return pd.read_csv("equityList.csv", index_col=0)
 
 
 @st.cache_data
@@ -77,7 +77,7 @@ def get_nifty50_list() -> dict:
     Returns:
         dict: A dictionary with symbols as keys and company names as values.
     """
-    return pd.read_csv("nifty50List.csv")
+    return pd.read_csv("nifty50List.csv", index_col=0)
 
 
 @st.cache_data
@@ -87,7 +87,7 @@ def get_nifty50_industries() -> list:
     Returns:
         list: A list of NIFTY 50 industries.
     """
-    return pd.read_csv("nifty50Industries.csv")["Industries"].tolist()
+    return pd.read_csv("nifty50Industries.csv")
 
 
 def format_value(number: float) -> str:

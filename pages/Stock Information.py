@@ -38,7 +38,7 @@ def download_nltk_resources():
 is_nifty_50 = st.toggle("Include only Nifty 50 Stocks", value=False)
 stock = st.selectbox(
     "Stock Selection",
-    fetch_nifty50_data()["Symbol"] if is_nifty_50 else fetch_equity_data()["Symbol"],
+    fetch_nifty50_data().index if is_nifty_50 else fetch_equity_data().index,
     index=None,
     placeholder="Select a stock",
 )

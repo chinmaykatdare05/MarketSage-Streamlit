@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import yfinance as yf
-from utils import get_equity_data
+from utils import get_equity_list
 import plotly.figure_factory as ff
 
 # Set the page configuration
@@ -19,7 +19,7 @@ st.title("MarketSage Home Page")
 
 option = st.selectbox(
     "Select a Stock",
-    get_equity_data()["Symbol"],
+    get_equity_list()["Symbol"],
     index=None,
     placeholder="Select a stock",
 )

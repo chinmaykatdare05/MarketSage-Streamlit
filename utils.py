@@ -1,110 +1,93 @@
 import streamlit as st
-from typing import Dict, List
-from nselib import capital_market
 import pandas as pd
 
-# For Deployment
-import requests
-from io import StringIO
+
+@st.cache_data
+def get_index_list() -> list:
+    """
+    Get a list of NIFTY indices.
+    Returns:
+        list: A list of NIFTY indices.
+    """
+    index_list = [
+        "NIFTY 50",
+        "NIFTY NEXT 50",
+        "NIFTY MIDCAP 50",
+        "NIFTY MIDCAP 100",
+        "NIFTY MIDCAP 150",
+        "NIFTY SMALLCAP 50",
+        "NIFTY SMALLCAP 100",
+        "NIFTY SMALLCAP 250",
+        "NIFTY MIDSMALLCAP 400",
+        "NIFTY 100",
+        "NIFTY 200",
+        "NIFTY AUTO",
+        "NIFTY BANK",
+        "NIFTY ENERGY",
+        "NIFTY FINANCIAL SERVICES",
+        "NIFTY FINANCIAL SERVICES 25/50",
+        "NIFTY FMCG",
+        "NIFTY IT",
+        "NIFTY MEDIA",
+        "NIFTY METAL",
+        "NIFTY PHARMA",
+        "NIFTY PSU BANK",
+        "NIFTY REALTY",
+        "NIFTY PRIVATE BANK",
+        "Securities in F&O",
+        "Permitted to Trade",
+        "NIFTY DIVIDEND OPPORTUNITIES 50",
+        "NIFTY50 VALUE 20",
+        "NIFTY100 QUALITY 30",
+        "NIFTY50 EQUAL WEIGHT",
+        "NIFTY100 EQUAL WEIGHT",
+        "NIFTY100 LOW VOLATILITY 30",
+        "NIFTY ALPHA 50",
+        "NIFTY200 QUALITY 30",
+        "NIFTY ALPHA LOW-VOLATILITY 30",
+        "NIFTY200 MOMENTUM 30",
+        "NIFTY COMMODITIES",
+        "NIFTY INDIA CONSUMPTION",
+        "NIFTY CPSE",
+        "NIFTY INFRASTRUCTURE",
+        "NIFTY MNC",
+        "NIFTY GROWTH SECTORS 15",
+        "NIFTY PSE",
+        "NIFTY SERVICES SECTOR",
+        "NIFTY100 LIQUID 15",
+        "NIFTY MIDCAP LIQUID 15",
+    ]
+    return index_list
 
 
 @st.cache_data
-def get_equity_data() -> Dict[str, str]:
+def get_equity_list() -> dict:
     """
-    Fetch equity list and create a dictionary mapping symbol to company name
+    Get a dictionary of equity symbols and their corresponding company names.
+    Returns:
+        dict: A dictionary with symbols as keys and company names as values.
     """
-    # For Delpoyment
-    url = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Referer": "https://www.nseindia.com",
-    }
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-    csv_text = response.text
-
-    equity_list = pd.read_csv(StringIO(csv_text))
-    symbols: pd.Series = equity_list.get("SYMBOL", pd.Series())
-    names: pd.Series = equity_list.get("NAME OF COMPANY", pd.Series())
-    return {"Symbol": symbols.tolist(), "Company Name": names.tolist()}
-
-    # For Local Usage and Testing
-    # equity_list: pd.DataFrame = capital_market.equity_list()
-    # symbols: pd.Series = equity_list.get("SYMBOL", pd.Series())
-    # names: pd.Series = equity_list.get("NAME OF COMPANY", pd.Series())
-    # return {"Symbol": symbols.tolist(), "Company Name": names.tolist()}
+    return pd.read_csv("equityList.csv")
 
 
 @st.cache_data
-def get_nifty50_data() -> Dict[str, str]:
+def get_nifty50_list() -> dict:
     """
-    Fetch Nifty 50 list and create a dictionary mapping symbol to company name
+    Get a dictionary of NIFTY 50 symbols and their corresponding company names.
+    Returns:
+        dict: A dictionary with symbols as keys and company names as values.
     """
-    nifty50_list: pd.DataFrame = capital_market.nifty50_equity_list()
-    symbols: pd.Series = nifty50_list.get("Symbol", pd.Series())
-    names: pd.Series = nifty50_list.get("Company Name", pd.Series())
-    return {"Symbol": symbols.tolist(), "Company Name": names.tolist()}
+    return pd.read_csv("nifty50List.csv")
 
 
 @st.cache_data
-def get_nifty50_industries() -> List[str]:
+def get_nifty50_industries() -> list:
     """
-    Fetch unique industries from Nifty 50 list
+    Get a list of NIFTY 50 industries.
+    Returns:
+        list: A list of NIFTY 50 industries.
     """
-    nifty50_list: pd.DataFrame = capital_market.nifty50_equity_list()
-    industries: pd.Series = nifty50_list.get("Industry", pd.Series())
-    return {"Industries": industries.dropna().unique().tolist()}
-
-
-index_list = [
-    "NIFTY 50",
-    "NIFTY NEXT 50",
-    "NIFTY MIDCAP 50",
-    "NIFTY MIDCAP 100",
-    "NIFTY MIDCAP 150",
-    "NIFTY SMALLCAP 50",
-    "NIFTY SMALLCAP 100",
-    "NIFTY SMALLCAP 250",
-    "NIFTY MIDSMALLCAP 400",
-    "NIFTY 100",
-    "NIFTY 200",
-    "NIFTY AUTO",
-    "NIFTY BANK",
-    "NIFTY ENERGY",
-    "NIFTY FINANCIAL SERVICES",
-    "NIFTY FINANCIAL SERVICES 25/50",
-    "NIFTY FMCG",
-    "NIFTY IT",
-    "NIFTY MEDIA",
-    "NIFTY METAL",
-    "NIFTY PHARMA",
-    "NIFTY PSU BANK",
-    "NIFTY REALTY",
-    "NIFTY PRIVATE BANK",
-    "Securities in F&O",
-    "Permitted to Trade",
-    "NIFTY DIVIDEND OPPORTUNITIES 50",
-    "NIFTY50 VALUE 20",
-    "NIFTY100 QUALITY 30",
-    "NIFTY50 EQUAL WEIGHT",
-    "NIFTY100 EQUAL WEIGHT",
-    "NIFTY100 LOW VOLATILITY 30",
-    "NIFTY ALPHA 50",
-    "NIFTY200 QUALITY 30",
-    "NIFTY ALPHA LOW-VOLATILITY 30",
-    "NIFTY200 MOMENTUM 30",
-    "NIFTY COMMODITIES",
-    "NIFTY INDIA CONSUMPTION",
-    "NIFTY CPSE",
-    "NIFTY INFRASTRUCTURE",
-    "NIFTY MNC",
-    "NIFTY GROWTH SECTORS 15",
-    "NIFTY PSE",
-    "NIFTY SERVICES SECTOR",
-    "NIFTY100 LIQUID 15",
-    "NIFTY MIDCAP LIQUID 15",
-]
+    return pd.read_csv("nifty50Industries.csv")["Industries"].tolist()
 
 
 def format_value(number: float) -> str:

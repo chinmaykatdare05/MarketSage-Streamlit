@@ -1,6 +1,6 @@
 import streamlit as st
 import yfinance as yf
-from utils import get_equity_data, get_nifty50_data, format_value
+from utils import get_equity_list, get_nifty50_list, format_value
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 
@@ -14,12 +14,12 @@ st.title("Stock Information")
 # Cache equity data to avoid redundant calls
 @st.cache_data
 def fetch_equity_data():
-    return get_equity_data()
+    return get_equity_list()
 
 
 @st.cache_data
 def fetch_nifty50_data():
-    return get_nifty50_data()
+    return get_nifty50_list()
 
 
 # Cache stock data to avoid redundant API calls

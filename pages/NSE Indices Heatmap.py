@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import requests
-from utils import index_list
+from utils import get_index_list
 
 # Page config
 st.set_page_config(
@@ -44,7 +44,7 @@ def get_index_details(category):
 
 # Title and index selection
 col1, col2, col3 = st.columns([1, 1, 1])
-index_filter = col1.selectbox("Select Index", index_list)
+index_filter = col1.selectbox("Select Index", get_index_list())
 slice_by = col2.selectbox("Slice By", ["Market Cap", "Gainers", "Losers"])
 
 # Fetch data

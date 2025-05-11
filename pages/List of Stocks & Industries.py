@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import get_equity_data, get_nifty50_data, get_nifty50_industries
+from utils import get_equity_list, get_nifty50_list, get_nifty50_industries
 
 # Set the page configuration
 st.set_page_config(
@@ -19,8 +19,8 @@ list_type = st.selectbox(
     ("Equity List", "Nifty 50 List", "Nifty 50 Industries"),
 )
 if list_type == "Equity List":
-    st.dataframe(get_equity_data())
+    st.dataframe(get_equity_list())
 elif list_type == "Nifty 50 List":
-    st.dataframe(get_nifty50_data())
+    st.dataframe(get_nifty50_list())
 elif list_type == "Nifty 50 Industries":
     st.dataframe(get_nifty50_industries())

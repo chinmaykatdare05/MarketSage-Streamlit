@@ -3,16 +3,37 @@ from typing import Dict, List
 from nselib import capital_market
 import pandas as pd
 
+# For Deployment
+import requests
+from io import StringIO
+
 
 @st.cache_data
 def get_equity_data() -> Dict[str, str]:
     """
     Fetch equity list and create a dictionary mapping symbol to company name
     """
-    equity_list: pd.DataFrame = capital_market.equity_list()
+    # For Delpoyment
+    url = "https://archives.nseindia.com/content/equities/EQUITY_L.csv"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.nseindia.com",
+    }
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    csv_text = response.text
+
+    equity_list = pd.read_csv(StringIO(csv_text))
     symbols: pd.Series = equity_list.get("SYMBOL", pd.Series())
     names: pd.Series = equity_list.get("NAME OF COMPANY", pd.Series())
     return {"Symbol": symbols.tolist(), "Company Name": names.tolist()}
+
+    # For Local Usage and Testing
+    # equity_list: pd.DataFrame = capital_market.equity_list()
+    # symbols: pd.Series = equity_list.get("SYMBOL", pd.Series())
+    # names: pd.Series = equity_list.get("NAME OF COMPANY", pd.Series())
+    # return {"Symbol": symbols.tolist(), "Company Name": names.tolist()}
 
 
 @st.cache_data

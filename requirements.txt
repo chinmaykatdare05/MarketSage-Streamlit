@@ -4,3 +4,4 @@ yfinance
 numpy
 plotly
 nselib
+pandas_market_calendars

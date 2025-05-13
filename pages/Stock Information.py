@@ -52,14 +52,17 @@ if st.button("Submit"):
     # Company Info Section
     st.header(info.get("longName", "N/A"))
 
-    col1, col2 = st.columns(2)
+    st.header("Company Information")
+    col1, col2, col3 = st.columns(3)
     with col1:
         st.metric(label="ISIN", value=data.isin)
         st.metric(label="Year Low", value=f"₹{round(data.fast_info['yearLow'], 2)}")
-        st.metric(label="Year High", value=f"₹{round(data.fast_info['yearHigh'], 2)}")
 
     with col2:
         st.metric(label="Sector", value=info.get("sector", "N/A"))
+        st.metric(label="Year High", value=f"₹{round(data.fast_info['yearHigh'], 2)}")
+
+    with col3:
         st.metric(label="Industry", value=info.get("industry", "N/A"))
         st.metric(
             label="Market Cap", value=f"₹{format_value(info.get('marketCap', 0))}"
@@ -67,7 +70,7 @@ if st.button("Submit"):
 
     # Technicals Section
     st.divider()
-    st.subheader("Technicals")
+    st.header("Technicals")
     col1, col2 = st.columns(2)
 
     with col1:
@@ -91,23 +94,17 @@ if st.button("Submit"):
 
     # Financials Section
     st.divider()
-    st.subheader("Fundamentals")
-    col1, col2 = st.columns(2)
+    st.header("Fundamentals")
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.metric(
             label="Revenue", value=f"₹{format_value(info.get('totalRevenue', 0))}"
         )
         st.download_button(
-            label="Download Financials",
-            data=data.financials.to_csv(),
-            file_name=f"{stock}_financials.csv",
-            mime="text/csv",
-        )
-        st.download_button(
-            label="Download Income Statement",
-            data=data.income_stmt.to_csv(),
-            file_name=f"{stock}_income_stmt.csv",
+            label="Download Balance Sheet",
+            data=data.balance_sheet.to_csv(),
+            file_name=f"{stock}_balance_sheet.csv",
             mime="text/csv",
         )
         st.download_button(
@@ -122,15 +119,27 @@ if st.button("Submit"):
             label="Gross Profit", value=f"₹{format_value(info.get('grossProfits', 0))}"
         )
         st.download_button(
-            label="Download Balance Sheet",
-            data=data.balance_sheet.to_csv(),
-            file_name=f"{stock}_balance_sheet.csv",
-            mime="text/csv",
-        )
-        st.download_button(
             label="Download Cash Flow",
             data=data.cash_flow.to_csv(),
             file_name=f"{stock}_cash_flow.csv",
+            mime="text/csv",
+        )
+        st.download_button(
+            label="Download Income Statement",
+            data=data.income_stmt.to_csv(),
+            file_name=f"{stock}_income_stmt.csv",
+            mime="text/csv",
+        )
+
+    with col3:
+        st.metric(
+            label="Earnings Per Share (EPS)",
+            value=f"₹{round(info.get('trailingEps', 0), 2)}",
+        )
+        st.download_button(
+            label="Download Financials",
+            data=data.financials.to_csv(),
+            file_name=f"{stock}_financials.csv",
             mime="text/csv",
         )
 
@@ -138,7 +147,7 @@ if st.button("Submit"):
     sia = download_nltk_resources()
 
     st.divider()
-    st.subheader("News & Sentiment Analysis")
+    st.header("News Sentiment Analysis")
     if data.news:
         sentiments = [
             sia.polarity_scores(article["content"]["summary"])["compound"]

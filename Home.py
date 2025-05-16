@@ -17,9 +17,10 @@ st.logo("./logo.png", size="large", icon_image="./logo.png")
 # Download stock data and plot the close price
 st.title("MarketSage Home Page")
 
+equity_list = get_equity_list()
 option = st.selectbox(
     "Select a Stock",
-    get_equity_list().index.tolist(),
+    equity_list.index,
     index=None,
     placeholder="Select a stock",
 )

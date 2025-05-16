@@ -20,7 +20,7 @@ st.title("MarketSage Home Page")
 equity_list = get_equity_list()
 option = st.selectbox(
     "Select a Stock",
-    equity_list.index,
+    list(equity_list.index),  # Convert to list of stock names/tickers
     index=None,
     placeholder="Select a stock",
 )

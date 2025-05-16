@@ -52,25 +52,17 @@ if st.button("Submit"):
     # Company Info Section
     st.header(info.get("longName", "N/A"))
 
-    st.header("Company Information")
-    col1, col2, col3 = st.columns(3)
+    # st.header("Company Information")
+    col1, col2 = st.columns(2)
     with col1:
-        st.metric(label="ISIN", value=data.isin)
-        st.metric(label="Year Low", value=f"₹{round(data.fast_info['yearLow'], 2)}")
+        st.metric(label="Sector", value=info.get("sector", "N/A"))
 
     with col2:
-        st.metric(label="Sector", value=info.get("sector", "N/A"))
-        st.metric(label="Year High", value=f"₹{round(data.fast_info['yearHigh'], 2)}")
-
-    with col3:
         st.metric(label="Industry", value=info.get("industry", "N/A"))
-        st.metric(
-            label="Market Cap", value=f"₹{format_value(info.get('marketCap', 0))}"
-        )
 
     # Technicals Section
     st.divider()
-    st.header("Technicals")
+    st.header("Performance")
     col1, col2 = st.columns(2)
 
     with col1:
@@ -99,8 +91,48 @@ if st.button("Submit"):
 
     with col1:
         st.metric(
-            label="Revenue", value=f"₹{format_value(info.get('totalRevenue', 0))}"
+            label="Market Cap", value=f"₹{format_value(info.get('marketCap', 0))}"
         )
+        st.metric(
+            label="PE Ratio",
+            value=f"{round(info.get('trailingPE', 0), 2) if info.get('trailingPE') is not None else 'N/A'}",
+        )
+        st.metric(
+            label="PB Ratio",
+            value=f"{round(info.get('priceToBook', 0), 2) if info.get('priceToBook') is not None else 'N/A'}",
+        )
+        st.metric(
+            label="Industry PE",
+            value=f"{round(info.get('industryPE', 0), 2) if info.get('industryPE') is not None else 'N/A'}",
+        )
+        st.metric(
+            label="Debt to Equity",
+            value=f"{round(info.get('debtToEquity', 0), 2) if info.get('debtToEquity') is not None else 'N/A'}",
+        )
+
+    with col2:
+        st.metric(
+            label="Return on Equity (ROE)",
+            value=f"{round(info.get('returnOnEquity', 0) * 100, 2) if info.get('returnOnEquity') is not None else 'N/A'}%",
+        )
+        st.metric(
+            label="Earnings Per Share (EPS)",
+            value=f"₹{round(info.get('trailingEps', 0), 2)}",
+        )
+        st.metric(
+            label="Dividend Yield",
+            value=f"{round(info.get('dividendYield', 0) * 100, 2) if info.get('dividendYield') is not None else 'N/A'}%",
+        )
+        st.metric(
+            label="Book Value",
+            value=f"₹{round(info.get('bookValue', 0), 2) if info.get('bookValue') is not None else 'N/A'}",
+        )
+        st.metric(
+            label="Face Value",
+            value=f"₹{round(info.get('faceValue', 0), 2) if info.get('faceValue') is not None else 'N/A'}",
+        )
+
+    with col3:
         st.download_button(
             label="Download Balance Sheet",
             data=data.balance_sheet.to_csv(),
@@ -112,11 +144,6 @@ if st.button("Submit"):
             data=data.dividends.to_csv(),
             file_name=f"{stock}_dividends.csv",
             mime="text/csv",
-        )
-
-    with col2:
-        st.metric(
-            label="Gross Profit", value=f"₹{format_value(info.get('grossProfits', 0))}"
         )
         st.download_button(
             label="Download Cash Flow",
@@ -130,17 +157,23 @@ if st.button("Submit"):
             file_name=f"{stock}_income_stmt.csv",
             mime="text/csv",
         )
-
-    with col3:
-        st.metric(
-            label="Earnings Per Share (EPS)",
-            value=f"₹{round(info.get('trailingEps', 0), 2)}",
-        )
         st.download_button(
             label="Download Financials",
             data=data.financials.to_csv(),
             file_name=f"{stock}_financials.csv",
             mime="text/csv",
+        )
+
+    st.divider()
+    st.header("Financials")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric(
+            label="Revenue", value=f"₹{format_value(info.get('totalRevenue', 0))}"
+        )
+    with col2:
+        st.metric(
+            label="Gross Profit", value=f"₹{format_value(info.get('grossProfits', 0))}"
         )
 
     # News and Sentiment Analysis
@@ -159,7 +192,7 @@ if st.button("Submit"):
         )
         st.metric(
             label="News Sentiment Score",
-            value=f"{sentiment_score}%",
+            value=f"{sentiment_score}",
             delta=f"{sentiment_score - 50}",
             delta_color="off" if sentiment_score == 50 else "normal",
         )

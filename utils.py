@@ -67,7 +67,7 @@ def get_equity_list() -> dict:
     Returns:
         dict: A dictionary with symbols as keys and company names as values.
     """
-    return pd.read_csv("equityList.csv", index_col=0)
+    return pd.read_csv("equityList.csv")
 
 
 @st.cache_data
